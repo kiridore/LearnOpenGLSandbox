@@ -1,0 +1,13 @@
+---
+Language:        Cpp
+BasedOnStyle:  Google
+IndentWidth: 4
+AccessModifierOffset: -4
+
+SortIncludes:    true
+IncludeBlocks:   Regroup
+IncludeCategories:
+  - Regex:           '^([<"]glad/glad.h)'
+    Priority:        1
+  - Regex:           '^([<"]GLFW/glfw3.h)'
+    Priority:        2
