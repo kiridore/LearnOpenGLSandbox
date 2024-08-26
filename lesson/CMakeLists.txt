@@ -11,5 +11,8 @@ PRIVATE
 target_link_libraries(common glfw glad)
 
 add_executable(hello_window ${CMAKE_CURRENT_SOURCE_DIR}/1.2.hello_window/main.cpp)
-
 target_link_libraries(hello_window common)
+
+add_executable(hello_triangle ${CMAKE_CURRENT_SOURCE_DIR}/1.3.hello_triangle/main.cpp)
+
+target_link_libraries(hello_triangle common)

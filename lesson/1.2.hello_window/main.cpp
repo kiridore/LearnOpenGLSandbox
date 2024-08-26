@@ -3,6 +3,11 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
+void processInput(GLFWwindow* window) {
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+}
+
 class ExampleHelloWindow : public Entry::AppI {
 public:
     ExampleHelloWindow(std::string name, std::string desc)
@@ -10,13 +15,15 @@ public:
 
     void Init() override {
         glViewport(0, 0, 800, 600);
-        glfwSetFramebufferSizeCallback(GetMainWindow(), framebuffer_size_callback);
+        glfwSetFramebufferSizeCallback(GetMainWindow(),
+                                       framebuffer_size_callback);
     }
 
     bool Update() override {
         if (this->GetMainWindow() == nullptr) return false;
         if (glfwWindowShouldClose(GetMainWindow())) return false;
 
+        processInput(GetMainWindow());
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
