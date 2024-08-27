@@ -10,9 +10,13 @@ PRIVATE
 
 target_link_libraries(common glfw glad)
 
-add_executable(hello_window ${CMAKE_CURRENT_SOURCE_DIR}/1.2.hello_window/main.cpp)
-target_link_libraries(hello_window common)
+function (generate_example name)
+    file(GLOB src_list ${name}/*.cpp)
+    add_executable(${name} ${src_list})
+    target_link_libraries(${name} common)
+endfunction()
 
-add_executable(hello_triangle ${CMAKE_CURRENT_SOURCE_DIR}/1.3.hello_triangle/main.cpp)
+generate_example(1.1.hello_window)
+generate_example(2.1.hello_triangle)
+generate_example(3.1.shader_uniform)
 
-target_link_libraries(hello_triangle common)

@@ -1,4 +1,5 @@
 #include "common/app.hpp"
+#include <math.h>
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
@@ -10,9 +11,9 @@ void processInput(GLFWwindow* window) {
 
 float vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f};
 
-class ExampleHelloTriangle : public Entry::AppI {
+class ExampleShader : public Entry::AppI {
 public:
-    ExampleHelloTriangle(std::string name, std::string desc)
+    ExampleShader(std::string name, std::string desc)
         : Entry::AppI(name, desc) {}
 
     void Init() override {
@@ -50,8 +51,10 @@ public:
             #version 330 core
             out vec4 FragColor;
 
+            uniform vec4 ourColor;
+
             void main() {
-                FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+                FragColor = ourColor;
             }
         )";
         GLuint frag_shader;
@@ -77,6 +80,12 @@ public:
         glClear(GL_COLOR_BUFFER_BIT);
         
         glUseProgram(program_);
+
+        float time_value = glfwGetTime();
+        float green_value = sin(time_value) / 2.0f + 0.5f;
+        GLuint uniform = glGetUniformLocation(this->program_, "ourColor");
+        glUniform4f(uniform, 0.0f, green_value, 0.0f, 1.0f);
+
         glBindVertexArray(VAO_);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
@@ -93,5 +102,5 @@ private:
     GLuint program_;
 };
 
-ENTRY_IMPLEMENT_MAIN(ExampleHelloTriangle, "ExampleHelloTriangle",
+ENTRY_IMPLEMENT_MAIN(ExampleShader, "ExampleHelloTriangle",
                      "https://learnopengl.com/Getting-started/Hello-Triangle")
