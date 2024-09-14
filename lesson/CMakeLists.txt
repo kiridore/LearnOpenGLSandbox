@@ -19,4 +19,5 @@ endfunction()
 generate_example(1.1.hello_window)
 generate_example(2.1.hello_triangle)
 generate_example(3.1.shader_uniform)
+generate_example(3.2.shader_interpolation)
 

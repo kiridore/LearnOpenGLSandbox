@@ -1,4 +1,5 @@
 #include "common/app.hpp"
+#include "common/shader.hpp"
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
@@ -8,12 +9,18 @@ void processInput(GLFWwindow* window) {
         glfwSetWindowShouldClose(window, true);
 }
 
-float vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f};
+float vertices[] = {
+    -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+    0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+    0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f
+};
 
 class ExampleShader : public Entry::AppI {
 public:
     ExampleShader(std::string name, std::string desc)
-        : Entry::AppI(name, desc) {}
+        : Entry::AppI(name, desc),
+          shader("./asset/shader/3.3.shader_class_vert.glsl",
+                 "./asset/shader/3.3.shader_class_frag.glsl") {}
 
     void Init() override {
         glViewport(0, 0, 800, 600);
@@ -29,43 +36,12 @@ public:
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices,
                      GL_STATIC_DRAW);
 
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
                               (void*)0);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
+                              (void*)(3 * sizeof(float)));
         glEnableVertexAttribArray(0);
-        // shader
-        const char* vert_shader_source = R"(
-            #version 330 core
-            layout (location = 0) in vec3 aPos;
-
-            void main() {
-                gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
-            }
-        )";
-        GLuint vert_shader;
-        vert_shader = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vert_shader, 1, &vert_shader_source, NULL);
-        glCompileShader(vert_shader);
-
-        const char* frag_shader_source = R"(
-            #version 330 core
-            out vec4 FragColor;
-
-            void main() {
-                FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
-            }
-        )";
-        GLuint frag_shader;
-        frag_shader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(frag_shader, 1, &frag_shader_source, NULL);
-        glCompileShader(frag_shader);
-
-        this->program_ = glCreateProgram();
-        glAttachShader(this->program_, vert_shader);
-        glAttachShader(this->program_, frag_shader);
-        glLinkProgram(this->program_);
-
-        glDeleteShader(vert_shader);
-        glDeleteShader(frag_shader);
+        glEnableVertexAttribArray(1);
     }
 
     bool Update() override {
@@ -75,8 +51,8 @@ public:
         processInput(GetMainWindow());
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-        
-        glUseProgram(program_);
+
+        shader.Use();
         glBindVertexArray(VAO_);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
@@ -90,7 +66,8 @@ public:
 
 private:
     GLuint VBO_, VAO_;
-    GLuint program_;
+
+    Shader shader;
 };
 
 ENTRY_IMPLEMENT_MAIN(ExampleShader, "ExampleHelloTriangle",

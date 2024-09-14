@@ -8,7 +8,11 @@ void processInput(GLFWwindow* window) {
         glfwSetWindowShouldClose(window, true);
 }
 
-float vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f};
+float vertices[] = {
+    -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+    0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+    0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f
+};
 
 class ExampleShader : public Entry::AppI {
 public:
@@ -29,16 +33,23 @@ public:
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices,
                      GL_STATIC_DRAW);
 
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
                               (void*)0);
         glEnableVertexAttribArray(0);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
+                              (void*)(3 * sizeof(float)));
+        glEnableVertexAttribArray(1);
         // shader
         const char* vert_shader_source = R"(
             #version 330 core
             layout (location = 0) in vec3 aPos;
+            layout (location = 1) in vec3 aColor;
+
+            out vec3 ourColor;
 
             void main() {
                 gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+                ourColor = aColor;
             }
         )";
         GLuint vert_shader;
@@ -48,10 +59,11 @@ public:
 
         const char* frag_shader_source = R"(
             #version 330 core
+            in  vec3 ourColor;
             out vec4 FragColor;
 
             void main() {
-                FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+                FragColor = vec4(ourColor.x, ourColor.y, ourColor.z, 1.0f);
             }
         )";
         GLuint frag_shader;
