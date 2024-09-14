@@ -26,3 +26,5 @@ include_directories(${CMAKE_SOURCE_DIR}/third_party/glm/)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lesson)
+
+file(COPY ${CMAKE_SOURCE_DIR}/asset DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
