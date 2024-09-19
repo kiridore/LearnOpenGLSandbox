@@ -23,6 +23,7 @@ include_directories(${CMAKE_SOURCE_DIR}/third_party/)
 include_directories(${CMAKE_SOURCE_DIR}/third_party/glad/include)
 include_directories(${CMAKE_SOURCE_DIR}/third_party/glfw/include)
 include_directories(${CMAKE_SOURCE_DIR}/third_party/glm/)
+include_directories(${CMAKE_SOURCE_DIR}/third_party/stb/)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lesson)

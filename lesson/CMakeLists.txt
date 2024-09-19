@@ -23,4 +23,5 @@ generate_example(2.1.hello_triangle)
 generate_example(3.1.shader_uniform)
 generate_example(3.2.shader_interpolation)
 generate_example(3.3.shader_class)
+generate_example(4.1.texture)
 
